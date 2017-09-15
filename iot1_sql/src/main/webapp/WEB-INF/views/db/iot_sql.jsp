@@ -77,9 +77,6 @@
 	
 	function callbackSql(result)
 	{
-		var key = result.key;
-		var obj = result[key];
-		var gridData = obj.list;
 		try
 		{
 			$("#sqlGrid").kendoGrid("destroy").empty();
@@ -87,16 +84,34 @@
 		catch(e)
 		{
 		}
-		var grid = $("#sqlGrid").kendoGrid(
+		if(result.msg == "S")
 		{
-			dataSource	:	{
-				data	:	gridData
-			,	pageSize	:	5
+			var key = result.key;
+			var obj = result[key];
+			var gridData = obj.list;
+			if(obj.row == "0")
+			{
+				$("#sqlLog").append(result.error + "</br>");
 			}
-		,	editable	:	false
-		,	sortable	:	true
-		,	pageable	:	true
-		});
+			else
+			{
+				var grid = $("#sqlGrid").kendoGrid(
+					{
+						dataSource	:	{
+							data	:	gridData
+						,	pageSize	:	5
+						}
+					,	editable	:	false
+					,	sortable	:	true
+					,	pageable	:	true
+					});
+				$("#sqlLog").append("성공" + "</br>");
+			}
+		}
+		else
+		{
+			$("#sqlLog").append(result.error + "</br>");
+		}
 	}
 	
 	function toolbarEvent(e) {
@@ -190,16 +205,15 @@
 							<kendo:splitter-pane id="center-pane" collapsible="false">
 								<kendo:splitter-pane-content>
 									<kendo:splitter name="vertical1" orientation="vertical"
-										style="height: 100%; width: 100%;">
+										style="width: 100%;">
 										<kendo:splitter-panes>
-											<kendo:splitter-pane id="top-pane" collapsible="false">
+											<kendo:splitter-pane id="top-pane" collapsible="false" style="width:100%;">
 												<div class="pane-content">
 													<c:import url="${tabJsp}" />
 												</div>
 											</kendo:splitter-pane>
-											<kendo:splitter-pane id="middle-pane" collapsible="false">
-												<div class="pane-content">
-													<div id="sqlGrid" style="width: 100%;height:100%;"></div>
+											<kendo:splitter-pane id="middle-pane" collapsible="true">
+												<div class="pane-content" id="sqlGrid" style="width:100%;heigh:100%;">
 												</div>
 											</kendo:splitter-pane>
 										</kendo:splitter-panes>
@@ -213,9 +227,7 @@
 			<kendo:splitter-pane id="middle-pane" collapsible="false"
 				size="100px">
 				<kendo:splitter-pane-content>
-					<div class="pane-content">
-						<h3>Outer splitter / middle pane</h3>
-						<p>Resizable only.</p>
+					<div class="pane-content" id="sqlLog" style="width:100%;">
 					</div>
 				</kendo:splitter-pane-content>
 			</kendo:splitter-pane>
