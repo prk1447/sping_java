@@ -72,45 +72,66 @@ public class DbDaoImpl extends SqlSessionDaoSupport implements DbDao
 	}
 
 	@Override
-	public Map<String, Object> runSql(Map<String, String> pm) throws Exception
+	public Map<String, Object> runSql(Map<String, Object> pm) throws Exception
 	{
-		String sql = pm.get("sql");
-		sql = sql.trim();
-		Map<String, Object> map = new HashMap<String, Object>();
-		Statement statement = dsf.getSqlSession().getConnection().createStatement();
-		if(sql.indexOf("select") == 0)
-		{
-			ResultSet resultSet = statement.executeQuery(sql);
-			ResultSetMetaData metaData = resultSet.getMetaData();
-			int columnCount = metaData.getColumnCount();
-			List<String> columns = new ArrayList<String>();
-			for(int i = 1; i <= columnCount; i++)
-			{
-				String columnName = metaData.getColumnName(i);
-				columns.add(columnName);
-			}
-			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-			while(resultSet.next())
-			{
-				Map<String, String> hm = new HashMap<String, String>();
-				for(String column : columns)
-				{
-					hm.put(column, resultSet.getString(column));
-				}
-				list.add(hm);
-			}
-			map.put("type", "select");
-			map.put("list", list);
-			map.put("columns", columns);
-		}
-		else
-		{
-			int result = statement.executeUpdate(sql);
-			map.put("type", "save");
-			map.put("row", result);
-		}
-		return map;
+		 int result = 0;
+	      int max = 0;
+	      List<String> sql;
+	      String num =(String) pm.get("type");
+
+	      List<String> type = new ArrayList<String>();
+	      Map<String, Object> map = new HashMap<String, Object>();
+	      if (num.equals("one")) 
+	      {
+	         sql =new ArrayList<String>();
+	         sql.add((String) pm.get("sql"));
+	         max = 1;
+	      } 
+	      else 
+	      {
+	         sql = (ArrayList<String>)pm.get("sql");
+	         max = sql.size()-1;
+	      }
+	      for (int j = 0; j < max; j++) 
+	      {
+	         Statement statement = dsf.getSqlSession().getConnection().createStatement();
+	         
+	         if (sql.get(j).trim().indexOf("select") == 0 || sql.get(j).trim().indexOf("SELECT") == 0)
+	         {
+	            type.add("select");
+	            ResultSet resultSet = statement.executeQuery(sql.get(j).trim());
+	            ResultSetMetaData metadata = resultSet.getMetaData();
+	            int columnCount = metadata.getColumnCount();
+	            List<String> columns = new ArrayList<String>();
+
+	            for (int i = 1; i <= columnCount; i++)
+	            {
+	               String columnName = metadata.getColumnName(i);
+	               columns.add(columnName);
+	            }
+	            List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+	            while (resultSet.next()) 
+	            {
+	               Map<String, String> hm = new HashMap<String, String>();
+	               for (String column : columns) 
+	               {
+	                  hm.put(column, resultSet.getString(column));
+	               }
+	               list.add(hm);
+	            }
+	            map.put("list", list);
+	            map.put("columns", columns);
+	         } 
+	         else 
+	         {
+	        	type.add("save");
+	            result += statement.executeUpdate(sql.get(j).trim());
+	            System.out.println(type);
+	            map.put("row", result);
+	            System.out.println(sql.get(j).trim());
+	         }
+	      }
+	      map.put("type", type);
+	      return map;
 	}
-	
-	
 }

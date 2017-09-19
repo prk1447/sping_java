@@ -2,6 +2,12 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%@ page session="false"%>
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.913/styles/kendo.common.min.css"/>
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.913/styles/kendo.rtl.min.css"/>
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.913/styles/kendo.silver.min.css"/>
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.3.913/styles/kendo.mobile.all.min.css"/>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/2017.3.913/js/kendo.all.min.js"></script>
 <c:set var="dbTreeJsp" value="/WEB-INF/views/db/db_treeview.jsp" />
 <c:set var="tableInfoJsp" value="/WEB-INF/views/db/table_info.jsp" />
 <c:set var="tabJsp" value="/WEB-INF/views/db/tab.jsp" />
@@ -61,6 +67,8 @@
 						var au = new AjaxUtil("db/run/sql");
 						var param = {};
 						param["sql"] = sql;
+						param["type"]="one";
+		               	kendoConsole.log(sql+";");
 						au.param = JSON.stringify(param);
 						au.setCallbackSuccess(callbackSql);
 						au.send();
@@ -68,7 +76,14 @@
 					}
 					else if(sqls)
 					{
-						return;
+		                var au = new AjaxUtil("db/run/sql");
+		                var param = {};
+		                param["sql"] = sqls;
+		                param["type"]="many";
+	             		au.param = JSON.stringify(param);
+		                au.setCallbackSuccess(callbackSql);
+		                au.send();
+		                return;
 					}
 				} 
 			}
@@ -77,41 +92,62 @@
 	
 	function callbackSql(result)
 	{
-		try
-		{
-			$("#sqlGrid").kendoGrid("destroy").empty();
-		}
-		catch(e)
-		{
-		}
-		if(result.msg == "S")
+		if(!result.error)
 		{
 			var key = result.key;
 			var obj = result[key];
-			var gridData = obj.list;
-			if(obj.row == "0")
+			var typeList = obj.type;
+			var select = "";
+			var save = "";
+			var gridData = "";
+			var count = 0;
+			
+			for(var i = 0; i < typeList.length; i++)
 			{
-				$("#sqlLog").append(result.error + "</br>");
+				if(typeList[i] == "select")
+				{
+					select = "select";
+				}
+				else
+				{
+					save = "save";
+				}
 			}
-			else
+			if(select == "select")
 			{
-				var grid = $("#sqlGrid").kendoGrid(
-					{
-						dataSource	:	{
-							data	:	gridData
-						,	pageSize	:	5
-						}
-					,	editable	:	false
-					,	sortable	:	true
-					,	pageable	:	true
-					});
-				$("#sqlLog").append("성공" + "</br>");
+				gridData = obj.list;
 			}
+			if(save == "save")
+			{
+				count = obj.row;
+			}
+			
+			try
+			{
+				$("#sqlGrid").kendoGrid("destroy").empty();
+				var tabStrip = $("#tabstrip").kendoTabStrip().data("kendoTabStrip");
+			    console.log(tabStrip.contentElement(0));
+			}
+			catch(e)
+			{
+			}
+			
+			var gridParam = {
+					dataSource	:	{
+						data	:	gridData
+					,	pageSize	:	10
+					}
+				,	editable	:	false
+				,	sortable	:	true
+				,	pageable	:	true
+			}
+			var grid = $("#sqlGrid").kendoGrid(gridParam);
+			kendoConsole.log("/* Affected rows: " + count + " = > 찾은 행: " + gridData.length);
 		}
 		else
-		{
-			$("#sqlLog").append(result.error + "</br>");
-		}
+    	{
+      		kendoConsole.log(result.error);
+    	}
 	}
 	
 	function toolbarEvent(e) {
@@ -205,7 +241,7 @@
 							<kendo:splitter-pane id="center-pane" collapsible="false">
 								<kendo:splitter-pane-content>
 									<kendo:splitter name="vertical1" orientation="vertical"
-										style="width: 100%;">
+										style="height: 100%; width: 100%;">
 										<kendo:splitter-panes>
 											<kendo:splitter-pane id="top-pane" collapsible="false" style="width:100%;">
 												<div class="pane-content">
@@ -213,7 +249,13 @@
 												</div>
 											</kendo:splitter-pane>
 											<kendo:splitter-pane id="middle-pane" collapsible="true">
-												<div class="pane-content" id="sqlGrid" style="width:100%;heigh:100%;">
+												<div id="tabstrip">
+													<ul>
+														<li>Tab 1</li>
+														<li>Tab 2</li>
+													</ul>
+													<div>Content 1</div>
+													<div>Content 2</div>
 												</div>
 											</kendo:splitter-pane>
 										</kendo:splitter-panes>
@@ -227,7 +269,7 @@
 			<kendo:splitter-pane id="middle-pane" collapsible="false"
 				size="100px">
 				<kendo:splitter-pane-content>
-					<div class="pane-content" id="sqlLog" style="width:100%;">
+					<div class="console" id="sqlLog">
 					</div>
 				</kendo:splitter-pane-content>
 			</kendo:splitter-pane>
@@ -240,67 +282,273 @@
 		</kendo:splitter-panes>
 	</kendo:splitter>
 </body>
-<style>
-#vertical {
-	height: 580px;
-	margin: 0 auto;
-}
+<style>	
+	@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+	*{margin:0; padding:0; border:none;}
+		
+	#tabstrip-parent,
+    #tabstrip {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      border-width: 0;
+    }
+	body{font-family: 'Jeju Gothic', serif;}
+	nav{
+		position:relative;
+		width:100%;
+		height:54px;
+		border-bottom:0;
+	}	
+	nav.navbar{
+		margin-bottom:0;		
+	}
+	.navbar-nav{
+		float:right;	
+	}	
+	.container{
+		width:100%;
+		height:54px;
+		background:linear-gradient(0deg,#cb1436,#ee1745);
+		border-bottom:2px dashed #fff;		
+	}		
+	#navbar ul li:last-child{
+		position:absolute;
+		right:0;
+	}
+	#navbar ul li a{
+		font-size:15px;
+		color:#fff;
+	}
+	#navbar ul li a:hover{
+		transition:0.3s;
+		color:#ee1745;	
+		background-color:#333;
+		border-radius:15px;	
+	}
+	.k-block, .k-content, .k-dropdown .k-input, .k-popup, .k-toolbar, .k-widget{
+		color:#fff;
+	}
+	.k-autocomplete, .k-block, .k-button-group .k-tool, .k-calendar th, .k-content, .k-dropdown-wrap, .k-dropzone-active, .k-editable-area, .k-editor-dialog .k-tabstrip-items, .k-filter-row>th, .k-footer-template td, .k-grid td, .k-grid td.k-state-selected, .k-grid-content-locked, .k-grid-footer, .k-grid-footer-locked, .k-grid-footer-wrap, .k-grid-header, .k-grid-header-locked, .k-grid-header-wrap, .k-group, .k-group-footer td, .k-grouping-header, .k-grouping-header .k-group-indicator, .k-header, .k-input, .k-pager-refresh, .k-pager-wrap, .k-pager-wrap .k-link, .k-panel>.k-item>.k-link, .k-panelbar .k-content, .k-panelbar .k-panel, .k-panelbar>.k-item>.k-link, .k-popup.k-align .k-list .k-item:last-child, .k-separator, .k-slider-track, .k-splitbar, .k-state-default, .k-state-default .k-select, .k-state-disabled, .k-textbox, .k-textbox>input, .k-tiles, .k-toolbar, .k-tooltip, .k-treemap-tile, .k-upload-files, .k-widget{
+		border-color:#cb1436;
+	}
+	.k-active-filter, .k-state-active, .k-state-active:hover, .k-tabstrip .k-state-active{
+		background-color:#cb1436;
+	}
+	.k-block, .k-button, .k-draghandle, .k-grid-header, .k-grouping-header, .k-header, .k-pager-wrap, .k-toolbar, .k-treemap-tile, html .km-pane-wrapper .k-header{
+		background-color:#ee1745;
+	}
+	.k-grid-content .k-auto-scrollable{
+		background-color:#333;
+	}
+	.k-autocomplete, .k-button, .k-draghandle, .k-dropdown-wrap, .k-grid-header, .k-grouping-header, .k-header, .k-numeric-wrap, .k-pager-wrap, .k-panelbar .k-tabstrip-items .k-item, .k-picker-wrap, .k-progressbar, .k-state-highlight, .k-tabstrip-items .k-item, .k-textbox, .k-toolbar, .km-pane-wrapper>.km-pane>.km-view>.km-content{
+		background-image:none,-webkit-gradient(linear,left top,left bottom,from(#cb1436),to(rgba(255,255,255,0)));
+	}
+	.k-button{
+		color:#fff;
+	}
+	.k-grid-header .k-header>.k-link, .k-header, .k-treemap-title{
+		color:#fff;
+	}
+	.k-active-filter, .k-state-active, .k-state-active:hover, .k-tabstrip .k-state-active{
+		color:#fff;
+	}
+	.k-panelbar>li.k-state-default>.k-link, .k-tabstrip-items .k-state-default .k-link{
+		color:#fff;
+	}
+	.k-active-filter, .k-state-active, .k-state-active:hover, .k-tabstrip .k-state-active{
+		border-color:#fff;
+	}
+	.navbar-brand {
+		background:url("${imgUrl}home_3.png")no-repeat center;
+		text-indent:-9999px;
+		width:50px;		
+	}
+	.navbar-brand:hover{
+		background:url("${imgUrl}home_4.png")no-repeat center;				
+	}
+	p{
+		width:0;
+		height:0;
+	}	
+	tr{
+		background-color:#333;
+		border-bottom:1px solid #fff;
+	}
+	tr.k-alt{
+		background-color:#393939;
+	}
+    #vertical {
+    	position:relative;
+    	width:100%;
+        height: 893px;
+        top:31px;
+    }
+    .pane-content{
+    	background-color:#333;
+    	color:#fff;
+    }
+    #middle-pane { 
+        color: #000; background-color: #333; 
+    }
 
-#middle-pane {
-	color: #000;
-	background-color: #fff;
-}
-
-#bottom-pane {
-	color: #000;
-	background-color: #fff;
-}
-
-#left-pane, #center-pane, #right-pane {
-	color: #000;
-	background-color: #fff;
-}
-
-.pane-content {
-	padding: 0 10px;
-}
-
-#toolbar {
-	border-width: 0 0 1px;
-}
-
-.user-image {
-	margin: 0 .5em;
-}
-
-#example {
-	height: 500px;
-}
-
-#example .box p {
-	padding-bottom: 5px;
-}
-
-#content .demo-section {
-	margin: 0;
-	padding: 10px;
-	border-width: 0 0 1px 0;
-}
-
-#content .demo-section label {
-	display: inline-block;
-	width: 40px;
-	text-align: right;
-	line-height: 2.5em;
-	vertical-align: middle;
-}
-
-#content .demo-section input {
-	width: 80%;
-}
- a[class='k-link'], tr{ 
-		text-align: center;
-		color:blue;
+    #bottom-pane { 
+        color: #000; background-color: #333; 
+    }
+    #left-pane{
+    	width:233px;
+    }
+    #left-pane .pane-content {
+    	width:100%; 
+    	border:none;
+    }
+    #toolbar {
+        width:100%;
+        background-color:#ee1745;        
+    }
+    .k-toolbar{
+    	background-image:none,-webkit-gradient(linear,left top,left bottom,from(#cb1436),to(rgba(255,255,255,0)));
+    }
+    .k-button.k-state-active:hover, .k-button:active:hover{
+    	background-color:#cb1436;
+    	box-shadow:inset 0 0 3px 1px #fff;
+    }
+    .k-button:focus:active:not(.k-state-disabled):not([disabled]){
+    	background-color:#cb1436;
+    	box-shadow:inset 0 0 3px 1px #cb1436;
+    }
+    .k-state-selected.k-state-focused{
+    	background-color:#cb1436;
+    	box-shadow:inset 0 0 3px 1px #cb1436;
+    	-webkit-box-shadow:inset 0 0 3px 1px #cb1436;
+    }        
+    .k-state-selected{
+    	background-color:#cb1436;
+    	box-shadow:0 0 3px 1px  #cb1436;
+    	-webkit-box-shadow:0 0 3px 1px #cb1436;
+    }
+    .k-header.k-state-focused{
+    	background-color:#cb1436;
+    	color:#fff;
+    }
+    .k-header .k-sorted .k-state-focused{
+    	border-color:#cb1436;
+    }    
+    #btnConnect{
+    	position:relative;
+    	margin:6px 0 0 8px;
+    } 
+    
+   
+    .k-state-selected{
+    	border-color:#fff;
+    }
+    .user-image {
+        margin: 0 .5em;
+    }
+    #example {
+        height: 500px;
+    }
+    #example .box p {
+        padding-bottom: 5px;
+    }
+    .k-grid-content{
+    	overflow:auto;
+    }
+    #content .demo-section {
+        margin: 0;
+        padding: 10px;
+        border-width: 0 0 1px 0;
+    }
+    #content .demo-section label {
+        display: inline-block;
+        width: 40px;
+        text-align: right;
+        line-height: 2.5em;
+        vertical-align: middle;
+    }   
+    #middle-pane>.pane-content >h3{
+    	margin:10px 0 0 10px;
+    }    
+    #middle-pane>.pane-content >p{
+    	margin:10px 0 0 10px;
+    }    
+	#bottom-pane.k-pane{		
+		background-color:#333;	
+		color:#fff;
+		text-align:center;		
+		border:none;
+		font-size:12px;
+		line-height:20px;
+	}	
+	.k-splitbar{
+		border-color:#ee1745;	
+		background-color:#ee1745;	
+	}
+	.k-splitter .k-scrollable{
+		overflow:hidden;
+	}	
+	#tabStrip > ul >li:last-child span{
+		background:url("${imgUrl}pen2.png")no-repeat center;
+		text-indent:-9999px;
+	}
+	@media screen and (min-width: 768px){
+		.navbar-nav{float:left;}
+	}
+	.k-tabstrip>.k-content{
+		padding:0;
+	}
+	#tabstrip{
+		background-color:#333;
+	}
+	#tabStrip-1{
+		height:90%;
+		background-color:#333;
+	}
+	#tabStrip-2{
+		height:90%;
+	}
+	.k-tabstrip .k-content.k-state-active{
+		background-color:#333;
+	}
+	.pane-content{
+		height:100%;
+	}
+	.k-tabstrip-wrapper{
+		height:100%;
+	}
+	.k-grid-content{
+		overflow-x: auto;
+   		overflow-y: scroll;
+	}
+	.k-tabstrip>.k-content{
+		overflow:hidden;
+	}
+	.weather{
+		position:relative;
+		width:100%;
+		height:100%;
+	}
+	#tableInfoGrid{
+		height:100%;
+	}
+	#btnRun{
+		position:absolute;
+		left:5px;		
+		top:7px;
+	}
+	#queryToolbar{
+		position:relative;		
+	}
+	#query{
+		position:absolute;
+		left:0;	
+		margin:10px;		
+		width:98%;
+		height:80%;
+		background-color:#333;
+		color:#fff;
+		font-size:18px;
 	}
 </style>
 </html>
