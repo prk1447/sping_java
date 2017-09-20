@@ -66,7 +66,7 @@
 					{
 						var au = new AjaxUtil("db/run/sql");
 						var param = {};
-						param["sql"] = sql;
+						param["sql"] = sql; 
 						param["type"]="one";
 		               	kendoConsole.log(sql+";");
 						au.param = JSON.stringify(param);
