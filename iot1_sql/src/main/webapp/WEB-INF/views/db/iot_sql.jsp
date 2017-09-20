@@ -97,10 +97,12 @@
 			var key = result.key;
 			var obj = result[key];
 			var typeList = obj.type;
+			var sqlName = obj.sqlname;
 			var select = "";
 			var save = "";
 			var gridData = "";
 			var count = 0;
+			
 			
 			for(var i = 0; i < typeList.length; i++)
 			{
@@ -124,7 +126,6 @@
 			
 			try
 			{
-				$("#sqlGrid").kendoGrid("destroy").empty();
 				var tabStrip = $("#tabstrip").kendoTabStrip().data("kendoTabStrip");
 			    console.log(tabStrip.contentElement(0));
 			}
@@ -132,16 +133,38 @@
 			{
 			}
 			
-			var gridParam = {
-					dataSource	:	{
-						data	:	gridData
-					,	pageSize	:	10
-					}
-				,	editable	:	false
-				,	sortable	:	true
-				,	pageable	:	true
+			if(gridData.length == 1)
+			{
+				var gridParam = {
+						dataSource	:	{
+							data	:	gridData
+						,	pageSize	:	10
+						}
+					,	editable	:	false
+					,	sortable	:	true
+					,	pageable	:	true
+				}
+				$("#gridData1").kendoGrid(dataParam);
 			}
-			var grid = $("#sqlGrid").kendoGrid(gridParam);
+			else
+			{
+				for(var i = 0; i < gridData.length; i++)
+				{
+					var dataParam = {
+							dataSource	:	{
+								data	:	gridData[i]
+							,	pageSize	:	10
+							}
+						,	editable	:	false
+						,	sortable	:	true
+						,	pageable	:	true	
+					}
+					$("#gridData" + (i+1)).kendoGrid(dataParam);
+					var tabName = sqlName[i];
+					tabName = tabName.substr(tabName.lastIndexOf("from")+4);
+ 					$("#sqlName" + (i+1)).html(tabName);
+				}
+			}
 			kendoConsole.log("/* Affected rows: " + count + " = > 찾은 행: " + gridData.length);
 		}
 		else
@@ -251,11 +274,11 @@
 											<kendo:splitter-pane id="middle-pane" collapsible="true">
 												<div id="tabstrip">
 													<ul>
-														<li>Tab 1</li>
-														<li>Tab 2</li>
+														<li id="sqlName1">tab 1</li>
+														<li id="sqlName2">tab 2</li>
 													</ul>
-													<div>Content 1</div>
-													<div>Content 2</div>
+													<div id="gridData1"></div>
+													<div id="gridData2"></div>
 												</div>
 											</kendo:splitter-pane>
 										</kendo:splitter-panes>
@@ -330,19 +353,19 @@
 		color:#fff;
 	}
 	.k-autocomplete, .k-block, .k-button-group .k-tool, .k-calendar th, .k-content, .k-dropdown-wrap, .k-dropzone-active, .k-editable-area, .k-editor-dialog .k-tabstrip-items, .k-filter-row>th, .k-footer-template td, .k-grid td, .k-grid td.k-state-selected, .k-grid-content-locked, .k-grid-footer, .k-grid-footer-locked, .k-grid-footer-wrap, .k-grid-header, .k-grid-header-locked, .k-grid-header-wrap, .k-group, .k-group-footer td, .k-grouping-header, .k-grouping-header .k-group-indicator, .k-header, .k-input, .k-pager-refresh, .k-pager-wrap, .k-pager-wrap .k-link, .k-panel>.k-item>.k-link, .k-panelbar .k-content, .k-panelbar .k-panel, .k-panelbar>.k-item>.k-link, .k-popup.k-align .k-list .k-item:last-child, .k-separator, .k-slider-track, .k-splitbar, .k-state-default, .k-state-default .k-select, .k-state-disabled, .k-textbox, .k-textbox>input, .k-tiles, .k-toolbar, .k-tooltip, .k-treemap-tile, .k-upload-files, .k-widget{
-		border-color:#cb1436;
+		border-color:#ccc;
 	}
 	.k-active-filter, .k-state-active, .k-state-active:hover, .k-tabstrip .k-state-active{
-		background-color:#cb1436;
+		background-color:#ccc;
 	}
 	.k-block, .k-button, .k-draghandle, .k-grid-header, .k-grouping-header, .k-header, .k-pager-wrap, .k-toolbar, .k-treemap-tile, html .km-pane-wrapper .k-header{
-		background-color:#ee1745;
+		background-color:#ccc;
 	}
 	.k-grid-content .k-auto-scrollable{
 		background-color:#333;
 	}
 	.k-autocomplete, .k-button, .k-draghandle, .k-dropdown-wrap, .k-grid-header, .k-grouping-header, .k-header, .k-numeric-wrap, .k-pager-wrap, .k-panelbar .k-tabstrip-items .k-item, .k-picker-wrap, .k-progressbar, .k-state-highlight, .k-tabstrip-items .k-item, .k-textbox, .k-toolbar, .km-pane-wrapper>.km-pane>.km-view>.km-content{
-		background-image:none,-webkit-gradient(linear,left top,left bottom,from(#cb1436),to(rgba(255,255,255,0)));
+		background-image:none,-webkit-gradient(linear,left top,left bottom,from(#555),to(rgba(255,255,255,0)));
 	}
 	.k-button{
 		color:#fff;
@@ -372,11 +395,15 @@
 		height:0;
 	}	
 	tr{
-		background-color:#333;
-		border-bottom:1px solid #fff;
+		background-color:#fff;
+		border-bottom:1px solid #fff;		
 	}
 	tr.k-alt{
-		background-color:#393939;
+		background-color:#dfdfdf;
+		color:#333;
+	}
+	td{
+		color:#333;
 	}
     #vertical {
     	position:relative;
@@ -550,5 +577,8 @@
 		color:#fff;
 		font-size:18px;
 	}
+	
+	
+	
 </style>
 </html>
