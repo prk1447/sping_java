@@ -6,6 +6,8 @@
 	<kendo:toolBar-items>
 		<kendo:toolBar-item type="button" text="접속" id="btnConnect"
 		click="toolbarEvent"></kendo:toolBar-item>
+		<kendo:toolBar-item type="button" text="XML생성" id="btnMakeXml"
+		click="toolbarEvent"></kendo:toolBar-item>
 	</kendo:toolBar-items>
 </kendo:toolBar>
 <kendo:treeView name="treeview" dataTextField="<%= new String[]{\"dbTitle\", \"database\", \"tableName\"} %>"

@@ -179,6 +179,11 @@
 	}
 	
 	function toolbarEvent(e) {
+		if(e.id=="btnMakeXml"){
+			var data = treeview.dataItem(window.selectedNode);
+			location.href = "/db/donwload/" + data.database;
+			return;	
+		}
 		if ($("#btnConnect").text() == "접속해제") {
 			treeview.dataSource.read();
 			$("#btnConnect").text("접속");

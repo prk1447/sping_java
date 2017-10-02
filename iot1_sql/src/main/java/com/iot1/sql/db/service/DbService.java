@@ -23,4 +23,6 @@ public interface DbService
 	public List<Column> getColumnList(Table table) throws Exception;
 	
 	public Map<String, Object> runSql(Map<String, Object> pm) throws Exception;
+	
+	public Map<String,Map<String, String>> getMakeXml(DataBase database) throws Exception;
 }

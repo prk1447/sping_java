@@ -9,7 +9,22 @@ public class Column
 	private String dataType;
 	private String characterMaximumLength;
 	private String isNullable;
+	private String extra;
+	private String columnKey;
 	
+	
+	public String getColumnKey() {
+		return columnKey;
+	}
+	public void setColumnKey(String columnKey) {
+		this.columnKey = columnKey;
+	}
+	public String getExtra() {
+		return extra;
+	}
+	public void setExtra(String extra) {
+		this.extra = extra;
+	}
 	public String getColumnName() 
 	{
 		return columnName;
