@@ -4,20 +4,20 @@
 <mapper namespace="user">
 
 	<select id="SELECT_USER" parameterType="user" resultType="user">
-		select usernum, userId, userpwd, username, age, address, hp1, hp2, hp3, departnum, userrolelevel, gender
-		from user_info
+		select userNo, userId, userpwd, username, age, address, hp1, hp2, hp3, departnum, userrolelevel, gender
+		from sql_admin
 		where 1=1
 		<if test="userId!=null and userId!=''">
 			and userid = #{userId}
 		</if>
-		<if test="userNum != 0">
-			and usernum = #{userNum}
+		<if test="userNo != 0">
+			and userNo = #{userNo}
 		</if>
 	</select>
 	
 	<select id="LIST_USER" parameterType="user" resultType="user">
-		select usernum, userid, userpwd, username, age, address, hp1, hp2, hp3, departnum, userrolelevel, gender
-		from user_info
+		select userNo, userid, userpwd, username, age, address, hp1, hp2, hp3, departnum, userrolelevel, gender
+		from sql_admin
 		where 1=1
 		<if test="userName != null">
 			and username like concat('%',#{userName},'%')
@@ -25,22 +25,22 @@
 	</select>
 	
 	<insert id="INSERT_USER" parameterType="user">
-		insert user_info(usernum, userid, userpwd, username, age, address, hp1, hp2, hp3, departnum, userrolelevel, gender)
-		values(#{userNum}, #{userId}, #{userPwd}, #{userName}, #{age}, #{address}, #{hp1}, #{hp2}, #{hp3}, #{departnum}, #{userRoleLevel}, #{gender})
+		insert sql_admin(userNo, userid, userpwd, username, age, address, hp1, hp2, hp3, departnum, userrolelevel, gender)
+		values(#{userNo}, #{userId}, #{userPwd}, #{userName}, #{age}, #{address}, #{hp1}, #{hp2}, #{hp3}, #{departnum}, #{userRoleLevel}, #{gender})
 	</insert>
 	
 	<update id="UPDATE_USER" parameterType="user">
-		update user_info
+		update sql_admin
 		set username = #{userName}
 		<if test="age!=0">
 			, age = #{age}
 		</if>
-		where usernum = #{userNum}
+		where userNo = #{userNo}
 	</update>
 	
 	<delete id="DELETE_USER" parameterType="user">
-		delete from user_info
-		where usernum = #{userNum}
+		delete from sql_admin
+		where userNo = #{userNo}
 	</delete>
 </mapper>
 

@@ -26,6 +26,11 @@ public class DbController {
 		return ds.getDbInfoList(di);
 	}
 
+	@RequestMapping(value="/db/iot_sql", method=RequestMethod.GET)
+	public String login()
+	{
+		return "db/iot_sql";
+	}
 	@RequestMapping(value = "/db/connecte", method = RequestMethod.POST)
 	public @ResponseBody ModelMap getConnectDB(@RequestBody DbInfo di, ModelMap map) {
 		try {

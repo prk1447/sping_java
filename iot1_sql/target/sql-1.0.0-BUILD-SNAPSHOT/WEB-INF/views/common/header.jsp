@@ -74,14 +74,14 @@ var JSException = function(msg){
 }
 var pageMove = function(page){
 	page = page.replace("/",":");
-	location.href = "${rootPath}/url/" + page;
+	location.href = "${rootPath}url/" + page;
 }
 var AjaxUtil = function (url, params, type, dataType){
 	if(!url){
 		alert("url정보가 없습니다.");
 		return null;
 	}
-	this.url = "${rootPath}/" + url;
+	this.url = "${rootPath}" + url;
 	
 	var generateJSON = function(params){
 		if(!params) return "";
@@ -101,6 +101,7 @@ var AjaxUtil = function (url, params, type, dataType){
 	this.type = type?type:"POST";
 	this.dataType = dataType?dataType:"json";
 	this.param = generateJSON(params);
+	alert(this.param);
 	this.callbackSuccess = function(json){
     	var url = json.url;
     	var msg = json.msg;

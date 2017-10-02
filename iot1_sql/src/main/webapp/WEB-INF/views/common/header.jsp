@@ -123,12 +123,19 @@ var AjaxUtil = function (url, params, type, dataType){
 	    ,   dataType : this.dataType 
 	    ,   beforeSend: function(xhr) {
 	        xhr.setRequestHeader("Accept", "application/json");
-	        xhr.setRequestHeader("Content-Type", "application/json");
+	        xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+	        xhr.setRequestHeader("AJAX",true);
 	    }
 	    ,   data     : this.param
 	    ,   success : this.callbackSuccess
 	    ,   error : function(xhr, status, e) {
+	    	if(xhr.responseJSON){
+	    		var obj = xhr.responseJSON;
+	    		alert(obj.msg);
+	    		pageMove(obj.url);
+	    	}else{
 		    	alert("에러 : "+e);
+	    	}
 		},
 		complete : function(e) {
 		}

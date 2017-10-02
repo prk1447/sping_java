@@ -22,8 +22,11 @@ public class UserController
 	private UserService us;
 	
 	@RequestMapping(value="/user/login", method=RequestMethod.GET)
-	public String login()
+	public String login(HttpSession hs)
 	{
+		if(hs.getAttribute("user")!=null){
+			return "common/main";
+		}
 		return "user/login";
 	}
 	
@@ -35,12 +38,12 @@ public class UserController
 		{
 			hs.setAttribute("user", rUser);
 			hm.put("msg", "로그인 성공하셨습니다.");
-			hm.put("url", "/main");
+			hm.put("url", "common/main");
 		}
 		else
 		{
 			hm.put("msg", "아이디와 비밀번호를 확인해주세요");
-			hm.put("url", "/user/login");
+			hm.put("url", "user/login");
 		}
 		return hm;
 	}

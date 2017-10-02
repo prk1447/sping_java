@@ -274,8 +274,8 @@
 											<kendo:splitter-pane id="middle-pane" collapsible="true">
 												<div id="tabstrip">
 													<ul>
-														<li id="sqlName1">tab 1</li>
-														<li id="sqlName2">tab 2</li>
+														<li id="sqlName1"></li>
+														<li id="sqlName2"></li>
 													</ul>
 													<div id="gridData1"></div>
 													<div id="gridData2"></div>
@@ -577,7 +577,9 @@
 		color:#fff;
 		font-size:18px;
 	}
-	
+	#tabstrip ul li{
+		padding: 10px;
+	}
 	
 	
 </style>

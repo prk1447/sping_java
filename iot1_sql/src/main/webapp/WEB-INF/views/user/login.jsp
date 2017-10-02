@@ -28,7 +28,7 @@
 	$("#btn2").click(function()
 	{
 		var paramIds = "userId,userPwd";
-		var au = new AjaxUtil("/user/login", paramIds); 
+		var au = new AjaxUtil("user/login", paramIds); 
 		au.send();
 	});
 </script>

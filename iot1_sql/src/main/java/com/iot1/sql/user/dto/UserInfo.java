@@ -1,5 +1,8 @@
 package com.iot1.sql.user.dto;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class UserInfo 
 {
 	private String userId;
@@ -13,121 +16,110 @@ public class UserInfo
 	private int departnum;
 	private String userRoleLevel;
 	private String gender;
-	private int userNum;
+	private int userNo;
 	
 	@Override
 	public String toString() 
 	{
 		return "UserInfo [userId=" + userId + ", userPwd=" + userPwd + ", userName=" + userName + ", age=" + age
 				+ ", address=" + address + ", hp1=" + hp1 + ", hp2=" + hp2 + ", hp3=" + hp3 + ", departnum=" + departnum
-				+ ", userRoleLevel=" + userRoleLevel + ", gender=" + gender + ", userNum=" + userNum + "]";
+				+ ", userRoleLevel=" + userRoleLevel + ", gender=" + gender + ", userNo=" + userNo + "]";
 	}
-	//userId
-	public String getUserId() 
-	{
+
+	public String getUserId() {
 		return userId;
 	}
-	public void setUserId(String userId) 
-	{
+
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	//userPwd
-	public String getUserPwd() 
-	{
+
+	public String getUserPwd() {
 		return userPwd;
 	}
-	public void setUserPwd(String userPwd) 
-	{
+
+	public void setUserPwd(String userPwd) {
 		this.userPwd = userPwd;
 	}
-	//userName
-	public String getUserName()
-	{
+
+	public String getUserName() {
 		return userName;
 	}
-	public void setUserName(String userName)
-	{
+
+	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	//userAge
-	public int getAge()
-	{
+
+	public int getAge() {
 		return age;
 	}
-	public void setAge(int age) 
-	{
+
+	public void setAge(int age) {
 		this.age = age;
 	}
-	//userAddress
-	public String getAddress() 
-	{
+
+	public String getAddress() {
 		return address;
 	}
-	public void setAddress(String address) 
-	{
+
+	public void setAddress(String address) {
 		this.address = address;
 	}
-	//userHp1
-	public String getHp1() 
-	{
+
+	public String getHp1() {
 		return hp1;
 	}
-	public void setHp1(String hp1)
-	{
+
+	public void setHp1(String hp1) {
 		this.hp1 = hp1;
 	}
-	//userHp2
-	public String getHp2()
-	{
+
+	public String getHp2() {
 		return hp2;
 	}
-	public void setHp2(String hp2)
-	{
+
+	public void setHp2(String hp2) {
 		this.hp2 = hp2;
 	}
-	//userHp3
-	public String getHp3() 
-	{
+
+	public String getHp3() {
 		return hp3;
 	}
-	public void setHp3(String hp3)
-	{
+
+	public void setHp3(String hp3) {
 		this.hp3 = hp3;
 	}
-	//userDepartnum
-	public int getDepartnum() 
-	{
+
+	public int getDepartnum() {
 		return departnum;
 	}
-	public void setDepartnum(int departnum)
-	{
+
+	public void setDepartnum(int departnum) {
 		this.departnum = departnum;
 	}
-	//userRoleLevel
-	public String getUserRoleLevel() 
-	{
+
+	public String getUserRoleLevel() {
 		return userRoleLevel;
 	}
-	public void setUserRoleLevel(String userRoleLevel)
-	{
+
+	public void setUserRoleLevel(String userRoleLevel) {
 		this.userRoleLevel = userRoleLevel;
 	}
-	//userGender
-	public String getGender() 
-	{
+
+	public String getGender() {
 		return gender;
 	}
-	public void setGender(String gender) 
-	{
+
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	//userNum
-	public int getUserNum()
-	{
-		return userNum;
+
+	public int getUserNo() {
+		return userNo;
 	}
-	public void setUserNum(int userNum)
-	{
-		this.userNum = userNum;
+
+	public void setUserNo(int userNo) {
+		this.userNo = userNo;
 	}
+	
 }

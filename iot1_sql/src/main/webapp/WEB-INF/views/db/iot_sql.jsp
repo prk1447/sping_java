@@ -16,6 +16,11 @@
 <title>IOT SQL</title>
 </head>
 <script>
+
+
+    window.moveTo(0,0);
+    window.resizeTo(screen.width,screen.height);
+
 	var treeview;
 	function onBound()
 	{

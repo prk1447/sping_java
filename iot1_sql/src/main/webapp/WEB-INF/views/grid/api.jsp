@@ -18,7 +18,7 @@ name="grid" pageable="true" sortable="true" scrollable="false" height="450" alig
 	<kendo:grid-toolbarItem name="save" text="저장"/>
 </kendo:grid-toolbar>
 <kendo:grid-columns>
-	<kendo:grid-column title="번호" field="userNum"/>
+	<kendo:grid-column title="번호" field="userNo"/>
 	<kendo:grid-column title="아이디" field="userId"/>
 	<kendo:grid-column title="이름" field="userName"/>
 	<kendo:grid-column title="나이" field="age"/>
