@@ -112,7 +112,7 @@ public class DbServiceImpl implements DbService
 	}
 
 	private String makeDeleteSql(List<Column> colList, String tableName){
-		String xml = " delete fromt " + tableName;
+		String xml = " delete from " + tableName;
 		String keyColumn = "";
 		for(Column c : colList){
 			if(c.getColumnKey()!=null && c.getColumnKey().equals("PRI")){

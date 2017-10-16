@@ -18,10 +18,10 @@
     	<typeAlias alias="column" type="com.iot1.sql.db.dto.Column"/>
 	</typeAliases>
 	<mappers>
-		<mapper resource="com/iot1/sql/user/sql/user_sql.xml" />
-		<mapper resource="com/iot1/sql/goods/sql/goods_sql.xml" />
-		<mapper resource="com/iot1/sql/vendor/sql/vendor_sql.xml" />
-		<mapper resource="com/iot1/sql/db/sql/db_sql.xml"/>
+		<mapper resource="com/sql/user_sql.xml" />
+		<mapper resource="com/sql/goods_sql.xml" />
+		<mapper resource="com/sql/vendor_sql.xml" />
+		<mapper resource="com/sql/db_sql.xml"/>
 	</mappers>
 </configuration>
 

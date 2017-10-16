@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd"> 
+
+<mapper namespace="user">
+
+	<select id="SELECT_USER" parameterType="user" resultType="user">
+		select userNo, userId, userpwd, username, age, address, hp1, hp2, hp3, departnum, userrolelevel, gender
+		from sql_admin
+		where 1=1
+		<if test="userId!=null and userId!=''">
+			and userid = #{userId}
+		</if>
+		<if test="userNo != 0">
+			and userNo = #{userNo}
+		</if>
+	</select>
+	
+	<select id="LIST_USER" parameterType="user" resultType="user">
+		select userNo, userid, userpwd, username, age, address, hp1, hp2, hp3, departnum, userrolelevel, gender
+		from sql_admin
+		where 1=1
+		<if test="userName != null">
+			and username like concat('%',#{userName},'%')
+		</if>
+	</select>
+	
+	<insert id="INSERT_USER" parameterType="user">
+		insert sql_admin(userNo, userid, userpwd, username, age, address, hp1, hp2, hp3, departnum, userrolelevel, gender)
+		values(#{userNo}, #{userId}, #{userPwd}, #{userName}, #{age}, #{address}, #{hp1}, #{hp2}, #{hp3}, #{departnum}, #{userRoleLevel}, #{gender})
+	</insert>
+	
+	<update id="UPDATE_USER" parameterType="user">
+		update sql_admin
+		set username = #{userName}
+		<if test="age!=0">
+			, age = #{age}
+		</if>
+		where userNo = #{userNo}
+	</update>
+	
+	<delete id="DELETE_USER" parameterType="user">
+		delete from sql_admin
+		where userNo = #{userNo}
+	</delete>
+</mapper>
+
+
+
+
+
+
